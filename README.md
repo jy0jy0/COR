@@ -1,71 +1,43 @@
 # Causal Representation Learning for Out-of-Distribution Recommendation
-This is the pytorch implementation of our paper at WWW 2022:
-> Causal Representation Learning for Out-of-Distribution Recommendation
->
-> Wenjie Wang, Xinyu Lin, Fuli Feng, Xiangnan He, Min Lin, Tat-Seng Chua
 
-## Environment
-- Anaconda 3
-- python 3.7.3
-- pytorch 1.4.0
-- numpy 1.16.4
+본 프로젝트는 논문  **"Causal Representation Learning for Out-of-Distribution Recommendation"** 을 바탕으로 인과 표현 학습 기반 추천 시스템을 구현하고, 이를 LLM 기반 추천 에이전트로 확장하는 것을 목표로 합니다.
 
-## Usage
+---
 
-### Data
-The experimental data are in './data' folder, including Synthetic Data, Meituan and Yelp. Due to the large size, 'item_feature.npy' of Yelp is uploaded to [Google drive](https://drive.google.com/drive/folders/1nKk15UlYzGVKCo5yMFVmW4yewbwid0dH?usp=sharing).
+## 🧭 프로젝트 개요
 
-### Training
-```
-python main.py --model_name=$1 --dataset=$2 --mlp_dims=$3 --mlp_p1_1_dims=$4 --mlp_p1_2_dims=$5 --mlp_p2_dims=$6 --mlp_p3_dims=$7 --lr=$8 --wd=$9 --batch_size=$10 --epochs=$11 --total_anneal_steps=$12 --anneal_cap=$13 --CI=$14 --dropout=$15 --Z1_hidden_size=$16 --E2_hidden_size=$17 --Z2_hidden_size=$18 --bn=$19 --sample_freq=$20 --regs=$21 --act_function=$22 --log_name=$23 --gpu=$24 --cuda
-```
-or use run.sh
-```
-sh run.sh model_name dataset mlp_dims mlp_p1_1_dims mlp_p1_2_dims mlp_p2_dims mlp_p3_dims lr wd batch_size epochs total_anneal_steps anneal_cap CI dropout Z1_hidden_size E2_hidden_size Z2_hidden_size bn sample_freq regs act_function log_name gpu_id
-```
-- The log file will be in the './code/log/' folder. 
-- The explanation of hyper-parameters can be found in './code/main.py'. 
-- The default hyper-parameter settings are detailed in './code/hyper-parameters.txt'.
+- 논문 핵심 구조 분석 및 모델 재현
+- 분포 외(Out-of-Distribution) 추천 시나리오 실험
+- 인과 표현 학습 기반 구조 구현 및 성능 검증
+- LLM 기반 질의응답형 추천 에이전트로 확장
+- 디버깅 및 인터페이스 고도화
 
-### Inference
-Get the results of COR over iid and ood data where only user features are drifted by running inference.py:
+---
 
-```
-python inference.py --dataset=$1 --ckpt=$2 --cuda
-```
+## 📅 주간 일정 (2025.04.08 ~ 2025.05.20)
 
-### Fine-tuneing
-```
-python main.py --model_name=$1 --dataset=$2 --X=$3 --lr=$4 --wd=$5 --batch_size=$6 --epochs=$7 --total_anneal_steps=$8 --anneal_cap=$9 --CI=$10 --dropout=$11 --bn=$12 --sample_freq=$13 --regs=$14 --log_name=$15 --ckpt=$16 --gpu=$17 --ood_finetune --cuda
-```
-or use finetune.sh
-```
-sh finetune.sh model_name dataset X lr wd batch_size epochs total_anneal_steps anneal_cap CI dropout bn sample_freq regs log_name <pre-trained model directory> gpu_id
-```
-- The log file will be in the './code/log/finetune/' folder.
+| 주차       | 일정                                 | 세부 내용 |
+|------------|--------------------------------------|-----------|
+| 4/08 (1주차) | 논문 구조 분석 + 구현 전략 수립        | 모델 구성 요소 파악, 구현 스코프 설정 |
+| 4/15 (2주차) | 데이터셋 구성 + OOD 시나리오 설계      | benchmark dataset 분석 및 분포 변화 조건 설계 |
+| 4/22 (3주차) | 모델 구현 완료 (Causal 구조 포함)       | 논문 구현 마무리, 학습 및 평가 파이프라인 연결 |
+| 4/29 (4주차) | LLM 에이전트 1차 개발         | 질의형 추천 초기 구현 |
+| 5/06 (5주차) | LLM 에이전트 및 추천 시스템 고도화      | cold start 및 unseen item 처리, 임베딩 전달 구조 개선 |
+| 5/13 (6주차) | LLM 에이전트 고도화 | 시연 스크립트(질의 시나리오) 구성 |
+| 5/20 (7주차) | 회고                     | 전체 구조 리뷰, 코드 리팩토링, 문서화 및 기능 정리 |
 
+---
 
-### Examples
+## ✅ 현재까지 진행 상황 (2025.04.07 기준)
 
-1. Train COR on iid meituan:
+### 🔍 논문 분석
+- 논문 핵심 개념 및 실험 설계 정리 완료
+- 인코더 구조와 인과 표현 분리 설계 파악
 
-```
-cd ./code
-sh run.sh COR meituan [3000] [] [1] [] [] 1e-3 0 500 300 0 0.1 1 0.5 500 1000 200 0 1 0 tanh log 0
-```
+### 🗂️ 데이터 파악
+- benchmark 데이터셋 수집 및 구조 분석
+- 분포 외 시나리오 구성 방식 정리
 
-2. Inference on synthetic data:
-
-```
-cd ./code
-python inference.py --dataset synthetic --ckpt <pre-trained model directory> --cuda
-```
-
-3. Fine-tuning COR on ood yelp:
-```
-cd ./code
-sh finetune.sh COR yelp 0 0.0001 0.03 500 0 0.5 1 0.4 0 1 0 log <pre-trained model directory> 0
-```
-## License
-
-NUS © [NExT++](https://www.nextcenter.org/)
+### 🧑‍💻 구현 진행
+- 모델 모듈 구조 정리 및 베이스라인 구현 진행
+- OOM 이슈 → 작은 모델 대체 → 성능 차이 확인
