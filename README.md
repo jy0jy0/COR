@@ -1,8 +1,7 @@
-# Causal Representation Learning for Out-of-Distribution Recommendation
+# Causal Representation Learning for OOD Recommendation
 
 본 프로젝트는 논문  **"Causal Representation Learning for Out-of-Distribution Recommendation"** 을 바탕으로 인과 표현 학습 기반 추천 시스템을 구현하고, 이를 LLM 기반 추천 에이전트로 확장하는 것을 목표로 합니다.
 
----
 
 ## 🧭 프로젝트 개요
 
@@ -12,7 +11,6 @@
 - LLM 기반 질의응답형 추천 에이전트로 확장
 - 디버깅 및 인터페이스 고도화
 
----
 
 ## 📅 주간 일정 (2025.04.08 ~ 2025.05.20)
 
@@ -40,4 +38,4 @@
 
 ### 🧑‍💻 구현 진행
 - 모델 모듈 구조 정리 및 베이스라인 구현 진행
-- OOM 이슈 → 작은 모델 대체 → 성능 차이 확인
+- 구조적 오류 해결 (~ing, 차원 불일치 등)
