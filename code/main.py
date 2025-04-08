@@ -177,7 +177,8 @@ else:
     mlp_p1_2_dims = [mlp_p1_1_dims[-1]] + eval(args.mlp_p1_2_dims)
 
     mlp_p2_dims = [args.E2_hidden_size] + eval(args.mlp_p2_dims) + [args.Z2_hidden_size]
-    mlp_p3_dims = [Z1_size + args.Z2_hidden_size] + eval(args.mlp_p3_dims) +  [n_items] # need to delete
+    # mlp_p3_dims = [Z1_size + args.Z2_hidden_size] + eval(args.mlp_p3_dims) +  [n_items] # need to delete
+    mlp_p3_dims = eval(args.mlp_p3_dims)
 
     # predefined causal graph
     adj = np.concatenate((np.array([[0.0]*E1_size + [1.0]*args.E2_hidden_size,
@@ -187,10 +188,12 @@ else:
 
     if args.model_name == 'COR':
         model = models.COR(mlp_q_dims, mlp_p1_dims, mlp_p2_dims, mlp_p3_dims, \
-                                                item_feature, adj, E1_size, args.dropout, args.bn, args.sample_freq, args.regs, args.act_function).to(device)
+                                                item_feature, adj, E1_size, args.dropout, args.bn, args.sample_freq, args.regs, args.act_function, device=device).to(device)
     elif args.model_name == 'COR_G':
         model = models.COR_G(mlp_q_dims, mlp_p1_1_dims, mlp_p1_2_dims, mlp_p2_dims, mlp_p3_dims, \
-                                                item_feature, adj, E1_size, args.dropout, args.bn, args.sample_freq, args.regs, args.act_function).to(device)
+                                                item_feature, adj, E1_size, args.dropout, args.bn, args.sample_freq, args.regs, args.act_function, device=device).to(device)
+    elif args.model_name == 'MultiVAE':
+        model = models.MultiVAE(eval(args.mlp_dims), args.dropout).to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.wd)
 criterion = models.loss_function

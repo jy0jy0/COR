@@ -1,0 +1,6 @@
+Namespace(CI=1, E2_hidden_size=20, X=10, Z1_hidden_size=8, Z2_hidden_size=20, act_function='tanh', anneal_cap=0.2, batch_size=500, bn=1, ckpt=None, cuda=False, data_path='../data/', dataset='synthetic', dropout=0.5, epochs=200, gpu='1', log_name='', lr=0.0001, mlp_dims='[100, 20]', mlp_p1_1_dims='[100, 200]', mlp_p1_2_dims='[1]', mlp_p2_dims='[]', mlp_p3_dims='[10]', model_name='COR', ood_finetune=False, ood_test=True, regs=0, sample_freq=1, save_path='./models/', topN='[10, 20, 50, 100]', total_anneal_steps=200000, wd=0.0)
+using device cpu
+n_users: 1000
+n_items: 1000
+n_users: 1000
+n_items: 1000

@@ -9,19 +9,25 @@ class COR(nn.Module):
     item feature is not used in this model, 
     '''
     def __init__(self, mlp_q_dims, mlp_p1_dims, mlp_p2_dims, mlp_p3_dims, \
-                                                     item_feature, adj, E1_size, dropout=0.5, bn=0, sample_freq=1, regs=0, act_function='tanh'):
+                                                     item_feature, adj, E1_size, dropout=0.5, bn=0, sample_freq=1, regs=0, act_function='tanh', device=None):
         super(COR, self).__init__()
+        self.device = device
         self.mlp_q_dims = mlp_q_dims
         self.mlp_p1_dims = mlp_p1_dims
         self.mlp_p2_dims = mlp_p2_dims
-        self.mlp_p3_dims = mlp_p3_dims
+        # if isinstance(mlp_p3_dims, str):
+        #     self.mlp_p3_dims = eval(mlp_p3_dims)
+        # elif isinstance(mlp_p3_dims, list) and isinstance(mlp_p3_dims[0], str):
+        #     self.mlp_p3_dims = list(map(int, mlp_p3_dims))
+        # else:
+        #     self.mlp_p3_dims = mlp_p3_dims
         self.adj = adj
         self.E1_size = E1_size
         self.bn = bn
         self.sample_freq = sample_freq
         self.regs = regs
         if act_function == 'tanh':
-            self.act_function = F.tanh
+            self.act_function = torch.tanh
         elif act_function == 'sigmoid':
             self.act_function = F.sigmoid
 
@@ -29,7 +35,7 @@ class COR(nn.Module):
         self.item_feature = item_feature
         self.item_learnable_dim = self.mlp_p2_dims[-1]
         self.item_learnable_feat = torch.randn([self.item_feature.size(0), self.item_learnable_dim], \
-                                               requires_grad=True).cuda()
+                                               requires_grad=True).to(self.device)
 
         # Last dimension of q- network is for mean and variance
         temp_q_dims = self.mlp_q_dims[:-1] + [self.mlp_q_dims[-1] * 2]
@@ -237,13 +243,20 @@ class COR_G(nn.Module):
     extension of item feature is not used in this model
     """
     def __init__(self, mlp_q_dims, mlp_p1_1_dims, mlp_p1_2_dims, mlp_p2_dims, mlp_p3_dims, \
-                                                         item_feature, adj, E1_size, dropout=0.5, bn=0, sample_freq=1, regs=0, act_function='tanh'):
+                                                         item_feature, adj, E1_size, dropout=0.5, bn=0, sample_freq=1, regs=0, act_function='tanh', device=None):
         super(COR_G, self).__init__()
+        self.device = device
         self.mlp_q_dims = mlp_q_dims
         self.mlp_p1_1_dims = mlp_p1_1_dims
         self.mlp_p1_2_dims = mlp_p1_2_dims
         self.mlp_p2_dims = mlp_p2_dims
-        self.mlp_p3_dims = mlp_p3_dims
+        if isinstance(mlp_p3_dims, str):
+            self.mlp_p3_dims = eval(mlp_p3_dims)
+        elif isinstance(mlp_p3_dims, list) and isinstance(mlp_p3_dims[0], str):
+            self.mlp_p3_dims = list(map(int, mlp_p3_dims))
+        else:
+            self.mlp_p3_dims = mlp_p3_dims
+        print("[DEBUG] mlp_p3_dims:", self.mlp_p3_dims)
         self.adj = adj
         self.E1_size = E1_size
         self.Z1_size = adj.size(0)
@@ -252,7 +265,7 @@ class COR_G(nn.Module):
         self.regs = regs
 
         if act_function == 'tanh':
-            self.act_function = F.tanh
+            self.act_function = torch.tanh
         elif act_function == 'sigmoid':
             self.act_function = F.sigmoid
 
@@ -260,7 +273,7 @@ class COR_G(nn.Module):
         self.item_feature = item_feature
         self.item_learnable_dim = self.mlp_p2_dims[-1]
         self.item_learnable_feat = torch.randn([self.item_feature.size(0), self.item_learnable_dim], \
-                                               requires_grad=True).cuda()
+                                               requires_grad=True).to(self.device)
 
         # Last dimension of q- network is for mean and variance
         temp_q_dims = self.mlp_q_dims[:-1] + [self.mlp_q_dims[-1] * 2]
@@ -273,7 +286,7 @@ class COR_G(nn.Module):
             d_in, d_out in zip(temp_q_dims[:-1], temp_q_dims[1:])])
         self.mlp_p1_1_layers = nn.ModuleList([nn.Linear(d_in, d_out) for
             d_in, d_out in zip(temp_p1_1_dims[:-1], temp_p1_1_dims[1:])])
-        self.mlp_p1_2_layers = [(torch.randn([self.Z1_size, d_in, d_out],requires_grad=True)).cuda() for
+        self.mlp_p1_2_layers = [(torch.randn([self.Z1_size, d_in, d_out],requires_grad=True)).to(self.device) for
             d_in, d_out in zip(temp_p1_2_dims[:-1], temp_p1_2_dims[1:])]
        
         for i, matrix in enumerate(self.mlp_p1_2_layers):
@@ -401,7 +414,12 @@ class COR_G(nn.Module):
             Z1 = torch.mean(Z1, 0)
             Z2 = torch.mean(Z2, 0)
 
+            Z1 = Z1.view(Z1.size(0), -1)
+            Z2 = Z2.view(Z2.size(0), -1)
+
         user_preference = torch.cat((Z1, Z2), 1)
+        user_preference = user_preference.view(user_preference.size(0), -1)
+        print(user_preference.shape)
 
         h_p3 = user_preference
         for i, layer in enumerate(self.mlp_p3_layers):
