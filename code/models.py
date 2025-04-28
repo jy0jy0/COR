@@ -28,8 +28,9 @@ class COR(nn.Module):
         # not used in this model, extended for using item feature in future work
         self.item_feature = item_feature
         self.item_learnable_dim = self.mlp_p2_dims[-1]
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.item_learnable_feat = torch.randn([self.item_feature.size(0), self.item_learnable_dim], \
-                                               requires_grad=True).cuda()
+                                            requires_grad=True).to(device)
 
         # Last dimension of q- network is for mean and variance
         temp_q_dims = self.mlp_q_dims[:-1] + [self.mlp_q_dims[-1] * 2]
@@ -259,8 +260,9 @@ class COR_G(nn.Module):
         # not used in this model, extended for using item feature in future work
         self.item_feature = item_feature
         self.item_learnable_dim = self.mlp_p2_dims[-1]
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.item_learnable_feat = torch.randn([self.item_feature.size(0), self.item_learnable_dim], \
-                                               requires_grad=True).cuda()
+                                            requires_grad=True).to(device)
 
         # Last dimension of q- network is for mean and variance
         temp_q_dims = self.mlp_q_dims[:-1] + [self.mlp_q_dims[-1] * 2]
@@ -273,7 +275,8 @@ class COR_G(nn.Module):
             d_in, d_out in zip(temp_q_dims[:-1], temp_q_dims[1:])])
         self.mlp_p1_1_layers = nn.ModuleList([nn.Linear(d_in, d_out) for
             d_in, d_out in zip(temp_p1_1_dims[:-1], temp_p1_1_dims[1:])])
-        self.mlp_p1_2_layers = [(torch.randn([self.Z1_size, d_in, d_out],requires_grad=True)).cuda() for
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.mlp_p1_2_layers = [(torch.randn([self.Z1_size, d_in, d_out],requires_grad=True)).to(device) for
             d_in, d_out in zip(temp_p1_2_dims[:-1], temp_p1_2_dims[1:])]
        
         for i, matrix in enumerate(self.mlp_p1_2_layers):

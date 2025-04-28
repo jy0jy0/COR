@@ -162,7 +162,8 @@ if args.ood_finetune:
 # Build the model
 ###############################################################################
 if args.ood_finetune:
-    model = torch.load(args.ckpt)
+    # model = torch.load(args.ckpt)
+    model = torch.load(args.ckpt, weights_only=False)
     ckpt_structure = args.ckpt.split('_')
 else: 
     E1_size = user_feature.shape[1]

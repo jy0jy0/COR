@@ -102,7 +102,8 @@ idxlist = list(range(N))
 # load the model
 ###############################################################################
 
-model = torch.load(args.ckpt)
+# model = torch.load(args.ckpt)
+model = torch.load(args.ckpt, weights_only=False)
 criterion = models.loss_function
 
 ###############################################################################

@@ -1,4 +1,24 @@
-nohup python -u main.py --model_name=$1 --dataset=$2 --X=$3 --lr=$4 --wd=$5 --batch_size=$6 --epochs=$7 --total_anneal_steps=$8 --anneal_cap=$9 --CI=$10 --dropout=$11 --bn=$12 --sample_freq=$13 --regs=$14 --log_name=$15 --ckpt=$16 --gpu=$17 --ood_finetune --cuda > ./log/finetune/$2_$1_$3%_$4lr_$5wd_$6bs_$8anneal_$9cap_$10CI_$11drop_$12bn_$13freq_$14reg_$15.txt 2>&1 &
+nohup python -u main.py \
+--model_name=${1} \
+--dataset=${2} \
+--X=${3} \
+--lr=${4} \
+--wd=${5} \
+--batch_size=${6} \
+--epochs=${7} \
+--total_anneal_steps=${8} \
+--anneal_cap=${9} \
+--CI=${10} \
+--dropout=${11} \
+--bn=${12} \
+--sample_freq=${13} \
+--regs=${14} \
+--log_name=${15} \
+--ckpt=${16} \
+--gpu=${17} \
+--ood_finetune \
+> ./log/finetune/${2}_${1}_${3}%_${4}lr_${5}wd_${6}bs_${8}anneal_${9}cap_${10}CI_${11}drop_${12}bn_${13}freq_${14}reg_${15}.txt 2>&1 &
+
 
 # Example
 # sh finetune.sh COR_G synthetic 10 0.0001 0.05 500 100 0 0.5 1 0.4 1 3 0 log <pre-trained model directory> 0
