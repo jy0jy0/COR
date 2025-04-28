@@ -1,0 +1,60 @@
+# .gitignore 파일 생성
+cat > .gitignore << 'EOF'
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Python/Conda
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.ipynb_checkpoints
+.env
+.venv
+venv/
+ENV/
+
+# PyTorch specific
+*.pt
+*.pth.tar
+
+# Logs
+logs/
+*.log
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated files
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+.coverage.*
+coverage.xml
+*.cover
+EOF
