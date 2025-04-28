@@ -57,4 +57,4 @@ htmlcov/
 .coverage.*
 coverage.xml
 *.cover
-EOF
+EOF*.pth
